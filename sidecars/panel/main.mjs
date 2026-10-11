@@ -7,6 +7,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
+const ROOT_DIR = dirname(dirname(HERE));
 const APP_DATA_DIR = process.env.ANTIGRAVITY_APP_DATA_DIR || join(homedir(), '.gemini', 'antigravity');
 const BRAIN_DIR = join(APP_DATA_DIR, 'brain');
 const DB_PATH = join(APP_DATA_DIR, 'conversation_summaries.db');
@@ -446,6 +447,63 @@ if (isSidecarEnv) {
         res.end(JSON.stringify(result));
       }
       return;
+    }
+
+    // Landing Page Routes (GitHub Pages source directory: docs/)
+    if (url.pathname === '/landing' || url.pathname === '/landing/' || url.pathname === '/docs' || url.pathname === '/docs/') {
+      const p = join(ROOT_DIR, 'docs', 'index.html');
+      if (existsSync(p)) {
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        return res.end(readFileSync(p));
+      }
+    }
+    if (url.pathname === '/landing/styles.css' || url.pathname === '/docs/styles.css') {
+      const p = join(ROOT_DIR, 'docs', 'styles.css');
+      if (existsSync(p)) {
+        res.writeHead(200, { 'Content-Type': 'text/css; charset=utf-8' });
+        return res.end(readFileSync(p));
+      }
+    }
+    if (url.pathname === '/landing/script.js' || url.pathname === '/docs/script.js') {
+      const p = join(ROOT_DIR, 'docs', 'script.js');
+      if (existsSync(p)) {
+        res.writeHead(200, { 'Content-Type': 'application/javascript; charset=utf-8' });
+        return res.end(readFileSync(p));
+      }
+    }
+    if (url.pathname.startsWith('/docs/assets/') || url.pathname.startsWith('/landing/assets/')) {
+      const relPath = url.pathname.replace(/^\/(?:docs|landing)\/assets\//, '');
+      const assetPath = join(ROOT_DIR, 'docs', 'assets', relPath);
+      if (existsSync(assetPath)) {
+        const ext = relPath.split('.').pop()?.toLowerCase();
+        const mimeTypes = {
+          png: 'image/png',
+          svg: 'image/svg+xml',
+          jpg: 'image/jpeg',
+          jpeg: 'image/jpeg',
+          webp: 'image/webp'
+        };
+        res.writeHead(200, { 'Content-Type': mimeTypes[ext] || 'application/octet-stream' });
+        return res.end(readFileSync(assetPath));
+      }
+    }
+
+    // Asset Routes (/assets/...)
+    if (url.pathname.startsWith('/assets/')) {
+      const relPath = url.pathname.replace(/^\/assets\//, '');
+      const assetPath = join(ROOT_DIR, 'assets', relPath);
+      if (existsSync(assetPath)) {
+        const ext = relPath.split('.').pop()?.toLowerCase();
+        const mimeTypes = {
+          png: 'image/png',
+          svg: 'image/svg+xml',
+          jpg: 'image/jpeg',
+          jpeg: 'image/jpeg',
+          webp: 'image/webp'
+        };
+        res.writeHead(200, { 'Content-Type': mimeTypes[ext] || 'application/octet-stream' });
+        return res.end(readFileSync(assetPath));
+      }
     }
 
     res.writeHead(404, { 'Content-Type': 'text/plain' });

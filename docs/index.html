@@ -1,0 +1,668 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Antigravity Context Monitor â€” Zero-Overhead Token Telemetry for Google Antigravity</title>
+  <meta name="description" content="A real-time, non-interruptive context window gauge and token telemetry monitor docked in the Google Antigravity auxiliary side pane. 0 model tokens consumed.">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="telemetry-theme">
+  <!-- Scanline & Ambient Grid Background -->
+  <div class="ambient-grid-overlay" aria-hidden="true"></div>
+  <div class="ambient-glow" aria-hidden="true"></div>
+
+  <!-- Precision Navigation Bar -->
+  <header class="site-header">
+    <div class="nav-container">
+      <a href="#" class="brand-anchor" aria-label="Antigravity Context Monitor Home">
+        <span class="brand-logo-frame">
+          <svg class="brand-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </span>
+        <div class="brand-text-block">
+          <span class="brand-title">Context Monitor</span>
+          <span class="brand-sub">Google Antigravity</span>
+        </div>
+      </a>
+
+      <nav class="nav-links" aria-label="Main Navigation">
+        <a href="#simulator" class="nav-link">Simulator</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#architecture" class="nav-link">Architecture</a>
+        <a href="#quickstart" class="nav-link">Install</a>
+      </nav>
+
+      <div class="nav-actions">
+        <span class="status-indicator-badge">
+          <span class="status-pulse-dot" aria-hidden="true"></span>
+          <span>v1.1.0 Ready</span>
+        </span>
+        <a href="https://github.com/jaytaykay/antigravity-context-monitor" target="_blank" rel="noopener noreferrer" class="btn-ghost-nav" title="View Source on GitHub">
+          <svg class="icon-16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="content-wrapper hero-layout">
+        <div class="hero-copy">
+          <div class="pill-announcement">
+            <span class="pill-tag">Zero Prompt Overhead</span>
+            <span class="pill-text">Out-of-band disk telemetry for active agent sessions</span>
+          </div>
+
+          <h1 class="hero-headline">
+            Real-time context telemetry for Google Antigravity.
+          </h1>
+
+          <p class="hero-subhead">
+            Stop guessing your context burn. Monitor live token velocity, pinpoint payload bloat from rogue file dumps, and orchestrate multi-agent swarms directly in your IDE auxiliary pane â€” with zero model tokens consumed.
+          </p>
+
+          <div class="hero-cta-group">
+            <div class="command-install-box" id="hero-command-box">
+              <span class="cmd-prompt-sym">$</span>
+              <code class="cmd-text">git clone https://github.com/jaytaykay/antigravity-context-monitor.git "$env:USERPROFILE\.gemini\config\plugins\context-monitor"</code>
+              <button class="btn-copy-cmd" id="btn-copy-hero" type="button" aria-label="Copy install command">
+                <svg class="copy-icon icon-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <svg class="copy-icon icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </button>
+            </div>
+            <a href="#simulator" class="btn-secondary-action">
+              <span>Test Live Simulator</span>
+              <svg class="icon-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <polyline points="19 12 12 19 5 12"></polyline>
+              </svg>
+            </a>
+          </div>
+
+          <!-- Proof Metrics Bar -->
+          <div class="proof-telemetry-strip">
+            <div class="proof-metric-item">
+              <span class="metric-val">0</span>
+              <span class="metric-label">Model Tokens Used</span>
+            </div>
+            <div class="proof-divider" aria-hidden="true"></div>
+            <div class="proof-metric-item">
+              <span class="metric-val">3s</span>
+              <span class="metric-label">Live Update Cadence</span>
+            </div>
+            <div class="proof-divider" aria-hidden="true"></div>
+            <div class="proof-metric-item">
+              <span class="metric-val">1.0M &amp; 2.0M</span>
+              <span class="metric-label">Auto-Detected Limits</span>
+            </div>
+            <div class="proof-divider" aria-hidden="true"></div>
+            <div class="proof-metric-item">
+              <span class="metric-val">100%</span>
+              <span class="metric-label">Local &amp; Private</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Cockpit Frame (Authentic Screenshot in Mock IDE Auxiliary Pane) -->
+        <div class="hero-visual-frame">
+          <div class="ide-shell">
+            <div class="ide-titlebar">
+              <div class="window-controls">
+                <span class="ctrl-dot red"></span>
+                <span class="ctrl-dot yellow"></span>
+                <span class="ctrl-dot green"></span>
+              </div>
+              <div class="ide-title-text">Google Antigravity â€” Autonomous Workspace [Active]</div>
+              <div class="ide-titlebar-right">
+                <span class="aux-pane-tag">Auxiliary Side Pane (Docked)</span>
+              </div>
+            </div>
+
+            <div class="ide-body-split">
+              <!-- Left side: Simulated Editor & Chat -->
+              <div class="ide-editor-mock">
+                <div class="editor-tabs-bar">
+                  <span class="mock-tab active">
+                    <svg class="icon-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    main.mjs
+                  </span>
+                  <span class="mock-tab">
+                    <svg class="icon-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    PRODUCT.md
+                  </span>
+                </div>
+                <div class="editor-lines">
+                  <div class="code-line"><span class="line-num">1</span><span class="token-kwd">import</span> { DatabaseSync } <span class="token-kwd">from</span> <span class="token-str">'node:sqlite'</span>;</div>
+                  <div class="code-line"><span class="line-num">2</span><span class="token-kwd">import</span> { readFileSync } <span class="token-kwd">from</span> <span class="token-str">'node:fs'</span>;</div>
+                  <div class="code-line"><span class="line-num">3</span></div>
+                  <div class="code-line"><span class="line-num">4</span><span class="token-comment">// Non-interruptive local telemetry</span></div>
+                  <div class="code-line"><span class="line-num">5</span><span class="token-kwd">export function</span> <span class="token-fn">pollContextBurn</span>() {</div>
+                  <div class="code-line"><span class="line-num">6</span>  <span class="token-kwd">const</span> raw = readFileSync(TRANSCRIPT_PATH);</div>
+                  <div class="code-line"><span class="line-num">7</span>  <span class="token-kwd">return</span> computeBurnVelocity(raw);</div>
+                  <div class="code-line"><span class="line-num">8</span>}</div>
+                </div>
+
+                <div class="chat-agent-callout">
+                  <div class="callout-header">
+                    <span class="agent-avatar">AG</span>
+                    <span class="callout-name">Antigravity Agent</span>
+                    <span class="callout-step">Turn 24 â€¢ Autonomous</span>
+                  </div>
+                  <div class="callout-body">
+                    "Reading large repository schemas and compiling test suites..."
+                  </div>
+                  <div class="callout-telemetry-badge">
+                    <span class="telemetry-pill">Zero prompt tokens consumed by monitor</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right side: Docked Auxiliary Panel Screenshot -->
+              <div class="ide-docked-panel">
+                <div class="docked-panel-header">
+                  <span class="dock-title">CONTEXT MONITOR</span>
+                  <div class="dock-actions">
+                    <span class="dock-badge">3s LIVE</span>
+                  </div>
+                </div>
+                <div class="docked-image-wrap">
+                  <img src="assets/screenshots/overview.png" alt="Context Monitor real-time telemetry panel docked in Antigravity" class="docked-screenshot" loading="eager">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Telemetry Simulator & Playground (Authored Focal Moment) -->
+    <section class="simulator-section" id="simulator">
+      <div class="content-wrapper">
+        <div class="section-heading-block">
+          <div class="section-tag-chip">Interactive Telemetry Cockpit</div>
+          <h2 class="section-title">Test the telemetry engine in real-time</h2>
+          <p class="section-desc">
+            Simulate realistic multi-turn agent activity. Watch the capacity meter fill, hover over velocity sparkbars to inspect instantaneous token spikes, and trigger subagent spawns without leaving this page.
+          </p>
+        </div>
+
+        <div class="sim-cockpit-grid">
+          <!-- Control Dashboard -->
+          <div class="sim-controls-card">
+            <div class="sim-card-header">
+              <span class="sim-card-title">Simulator Controls</span>
+              <span class="sim-active-mode" id="sim-model-tag">Gemini Pro 2.0M</span>
+            </div>
+
+            <div class="sim-control-group">
+              <label class="control-label" for="sim-model-select">Target Model Limit Preset</label>
+              <div class="select-pill-group" id="sim-model-selector" role="radiogroup" aria-label="Model Limit Selection">
+                <button type="button" class="btn-model-preset" data-model="flash" data-limit="1000000" role="radio" aria-checked="false">
+                  <span>Gemini Flash</span>
+                  <span class="preset-cap">1.0M</span>
+                </button>
+                <button type="button" class="btn-model-preset active" data-model="pro" data-limit="2000000" role="radio" aria-checked="true">
+                  <span>Gemini Pro</span>
+                  <span class="preset-cap">2.0M</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="sim-actions-stack">
+              <span class="control-label">Simulate Agent Invocations</span>
+              <div class="sim-buttons-grid">
+                <button type="button" class="btn-sim-action" id="btn-sim-query">
+                  <span class="sim-btn-lead">+ Prompt Turn</span>
+                  <span class="sim-btn-cost">~3.2k tok</span>
+                </button>
+                <button type="button" class="btn-sim-action" id="btn-sim-file">
+                  <span class="sim-btn-lead">+ Large File Read</span>
+                  <span class="sim-btn-cost">~14.5k tok</span>
+                </button>
+                <button type="button" class="btn-sim-action" id="btn-sim-term">
+                  <span class="sim-btn-lead">+ Terminal Dump</span>
+                  <span class="sim-btn-cost">~28.0k tok</span>
+                </button>
+                <button type="button" class="btn-sim-action highlight" id="btn-sim-subagent">
+                  <span class="sim-btn-lead">+ Fork Subagent</span>
+                  <span class="sim-btn-cost">~18.5k tok</span>
+                </button>
+              </div>
+
+              <div class="sim-reset-wrap">
+                <button type="button" class="btn-sim-reset" id="btn-sim-reset">
+                  <svg class="icon-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                  </svg>
+                  <span>Reset Simulation Session</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="sim-callout-note">
+              <svg class="icon-14 accent-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <span>The live plugin auto-detects these exact model events in reverse from your IDE session logs without any user prompt overhead.</span>
+            </div>
+          </div>
+
+          <!-- Live Reactive Telemetry Widget -->
+          <div class="sim-display-card">
+            <!-- Simulated Panel Header -->
+            <div class="sim-panel-top">
+              <div class="sim-header-title-row">
+                <div class="agent-title-cluster">
+                  <svg class="agent-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                    <line x1="8" y1="21" x2="16" y2="21"/>
+                    <line x1="12" y1="17" x2="12" y2="21"/>
+                  </svg>
+                  <span class="sim-conv-name">Autonomous Workflow Engine</span>
+                  <span class="sim-role-pill">MAIN AGENT</span>
+                </div>
+                <div class="sim-model-badge">
+                  <span id="sim-live-model-badge">Gemini Pro 2.0M</span>
+                  <span class="sim-health-dot nominal" id="sim-health-dot" title="Context nominal"></span>
+                </div>
+              </div>
+
+              <!-- Context Capacity Ribbon -->
+              <div class="sim-capacity-block">
+                <div class="sim-capacity-readout-row">
+                  <div class="sim-tokens-main">
+                    <span class="num-highlight" id="sim-tokens-active">87.7k</span>
+                    <span class="num-sep">/</span>
+                    <span class="num-limit" id="sim-tokens-limit">2.0M</span>
+                  </div>
+                  <div class="sim-tokens-meta">
+                    <span class="sim-pct-badge" id="sim-pct-badge">4.4%</span>
+                    <span class="sim-remain-text" id="sim-remain-text">1.9M remaining</span>
+                  </div>
+                </div>
+
+                <div class="sim-capacity-track-wrap">
+                  <div class="sim-capacity-track">
+                    <div class="track-segment cached" id="sim-bar-cached" style="width: 4.1%" title="Prompt Cache"></div>
+                    <div class="track-segment fresh" id="sim-bar-fresh" style="width: 0.3%" title="Fresh Input & Tools"></div>
+                  </div>
+                  <div class="track-pip pip-50" title="50% Threshold"></div>
+                  <div class="track-pip pip-75" title="75% Elevated"></div>
+                  <div class="track-pip pip-90" title="90% Critical"></div>
+                </div>
+
+                <div class="sim-legend-row">
+                  <span class="legend-chip"><span class="dot cached"></span> Cached: <b id="sim-stat-cached">84.4k</b></span>
+                  <span class="legend-chip"><span class="dot fresh"></span> Fresh: <b id="sim-stat-fresh">3.3k</b></span>
+                  <span class="legend-chip"><span class="dot output"></span> Output: <b id="sim-stat-output">407</b></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Turn Velocity Sparkbar Chart -->
+            <div class="sim-velocity-block">
+              <div class="velocity-head">
+                <span class="v-title">Turn Velocity</span>
+                <span class="v-readout" id="sim-spark-readout">Step 117 â€¢ 3.3k in, 407 out</span>
+              </div>
+              <div class="sim-sparkbars-row" id="sim-sparkbars-container">
+                <!-- Dynamically populated 16 bars -->
+              </div>
+              <div class="sim-spark-axis">
+                <span id="sim-axis-oldest">Step 87</span>
+                <span id="sim-axis-latest">Step 117 (Latest)</span>
+              </div>
+            </div>
+
+            <!-- Active Subagents Fleet Preview -->
+            <div class="sim-subagents-block">
+              <div class="sub-head">
+                <span class="sub-title">Agent Fleet</span>
+                <span class="sub-count" id="sim-sub-count">2 Active Workers</span>
+              </div>
+              <div class="sim-agent-list" id="sim-agent-list">
+                <div class="sim-agent-row">
+                  <div class="agent-row-left">
+                    <span class="agent-name">Architecture Researcher</span>
+                    <span class="agent-badge">Subagent</span>
+                  </div>
+                  <span class="agent-status idle">âšª IDLE</span>
+                </div>
+                <div class="sim-agent-row">
+                  <div class="agent-row-left">
+                    <span class="agent-name">Telemetry Engine Optimizer</span>
+                    <span class="agent-badge">Subagent</span>
+                  </div>
+                  <span class="agent-status running">ðŸŸ¢ RUNNING</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visual Feature Tours (With Full Captures) -->
+    <section class="features-section" id="features">
+      <div class="content-wrapper">
+        <div class="section-heading-block">
+          <div class="section-tag-chip">Engineered Features</div>
+          <h2 class="section-title">Built for heavy, multi-hour agent sessions</h2>
+          <p class="section-desc">
+            Designed to withstand complex coding migrations, large codebase reviews, and multi-agent parallelism without losing track of your token budget.
+          </p>
+        </div>
+
+        <div class="features-flow">
+          <!-- Feature 1: Turn Velocity & Step Inspector -->
+          <article class="feature-row">
+            <div class="feature-copy">
+              <div class="feature-index">01</div>
+              <h3 class="feature-heading">Interactive Turn Velocity Graph</h3>
+              <p class="feature-text">
+                Every agent turn is measured in real-time. The 16-step sparkbar graph provides instantaneous visual telemetry of token consumption spikes.
+              </p>
+              <ul class="feature-bullets">
+                <li><strong>In-Graph Header Sync:</strong> Hovering any sparkbar updates the exact input and output token count directly inside the header without awkward mouse tooltips.</li>
+                <li><strong>Step Inspector Drawer:</strong> Click any sparkbar to open a deep payload breakdown of that exact turn, revealing which tool calls or file chunks caused the spike.</li>
+                <li><strong>Proportional Severity Anchors:</strong> Bars highlight elevated (amber) or critical (red) thresholds to warn you of runaway loops.</li>
+              </ul>
+            </div>
+            <div class="feature-visual-card">
+              <div class="visual-card-frame">
+                <img src="assets/screenshots/turn-velocity-inspector.png" alt="Context Monitor Turn Velocity graph and step inspector" class="feature-shot" loading="lazy">
+              </div>
+            </div>
+          </article>
+
+          <!-- Feature 2: Context Payload Attribution -->
+          <article class="feature-row reverse">
+            <div class="feature-copy">
+              <div class="feature-index">02</div>
+              <h3 class="feature-heading">Progressive Payload Attribution</h3>
+              <p class="feature-text">
+                Know where tokens actually live. Instead of an opaque single number, five progressive drawers categorize every token in context:
+              </p>
+              <ul class="feature-bullets">
+                <li><strong>Skills &amp; Instructions:</strong> System prompts, workflow definitions, and tool declaration overhead.</li>
+                <li><strong>Code Files:</strong> Exact token counts for all source code read and edited in the session.</li>
+                <li><strong>Markdown &amp; Plans:</strong> Implementation plans, specs, and conversation artifacts.</li>
+                <li><strong>Terminal &amp; Commands:</strong> Shell outputs, compiler errors, and command line dumps.</li>
+                <li><strong>Prompt Cache Warmth:</strong> Real-time cache hit rate tracker, elapsed response counter, and warm window timer.</li>
+              </ul>
+            </div>
+            <div class="feature-visual-card">
+              <div class="visual-card-frame">
+                <img src="assets/screenshots/payload-attribution.png" alt="Categorized Context Payload Attribution Accordions" class="feature-shot" loading="lazy">
+              </div>
+            </div>
+          </article>
+
+          <!-- Feature 3: Multi-Agent Fleet Hierarchy -->
+          <article class="feature-row">
+            <div class="feature-copy">
+              <div class="feature-index">03</div>
+              <h3 class="feature-heading">Agent Fleet &amp; Subagent Tracking</h3>
+              <p class="feature-text">
+                Modern agentic coding uses swarms of parallel subagents. Context Monitor gives you first-class cockpit visibility into the entire agent tree.
+              </p>
+              <ul class="feature-bullets">
+                <li><strong>Hierarchy Connectors:</strong> Real-time tree view linking the Root Orchestrator to background child subagents.</li>
+                <li><strong>Live Execution States:</strong> Instant green (RUNNING) and grey (IDLE) status indicators for background processes.</li>
+                <li><strong>Active Tool Surveillance:</strong> Displays what command or file operation each subagent is actively executing.</li>
+                <li><strong>Isolated Subagent Contexts:</strong> Monitor individual token accumulation before launching new parallel tasks.</li>
+              </ul>
+            </div>
+            <div class="feature-visual-card">
+              <div class="visual-card-frame">
+                <img src="assets/screenshots/agent-fleet.png" alt="Multi-Agent Hierarchy and Subagents Tracking Tree" class="feature-shot" loading="lazy">
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Out-of-Band Engine Architecture -->
+    <section class="architecture-section" id="architecture">
+      <div class="content-wrapper">
+        <div class="section-heading-block">
+          <div class="section-tag-chip">Engineered Differently</div>
+          <h2 class="section-title">Zero API tokens. Zero prompt interruptions.</h2>
+          <p class="section-desc">
+            How Context Monitor achieves total out-of-band telemetry without polluting your context window.
+          </p>
+        </div>
+
+        <div class="arch-diagram-grid">
+          <div class="arch-flow-card">
+            <div class="arch-icon-bubble">
+              <svg class="icon-20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+              </svg>
+            </div>
+            <h3 class="arch-card-title">1. Local Transcripts &amp; SQLite</h3>
+            <p class="arch-card-text">
+              Antigravity writes conversation logs directly to disk (`transcript.jsonl` and `conversation_summaries.db`). Context Monitor streams these files using native Node.js zero-dependency file and SQLite readers.
+            </p>
+          </div>
+
+          <div class="arch-flow-card">
+            <div class="arch-icon-bubble">
+              <svg class="icon-20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+            </div>
+            <h3 class="arch-card-title">2. Out-of-Band Sidecar</h3>
+            <p class="arch-card-text">
+              The sidecar runs as an independent daemon. It never injects prompt messages into the agent's turn loop and never consumes LLM inference tokens. Telemetry calculations happen in pure local V8 microsecond routines.
+            </p>
+          </div>
+
+          <div class="arch-flow-card">
+            <div class="arch-icon-bubble">
+              <svg class="icon-20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+            </div>
+            <h3 class="arch-card-title">3. Native Side Pane View</h3>
+            <p class="arch-card-text">
+              The webview docks directly in Antigravity's auxiliary side pane. Telemetry refreshes every 3 seconds with zero flicker, tabular numbers, and surgical contrast designed to match the Antigravity dark theme.
+            </p>
+          </div>
+        </div>
+
+        <!-- Comparative Comparison Matrix -->
+        <div class="comparison-card">
+          <div class="comp-head">
+            <h3 class="comp-title">The Telemetry Contrast</h3>
+          </div>
+          <div class="comp-table-wrap">
+            <table class="comp-table">
+              <thead>
+                <tr>
+                  <th scope="col">Capability</th>
+                  <th scope="col" class="th-highlight">Context Monitor</th>
+                  <th scope="col">CLI Commands (e.g. /context)</th>
+                  <th scope="col">Unmonitored Agentic Runs</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Model Token Cost</strong></td>
+                  <td class="td-highlight"><span class="badge-success">0 Tokens</span></td>
+                  <td>Consumes turn prompt budget</td>
+                  <td>0 Tokens (Unknown burn)</td>
+                </tr>
+                <tr>
+                  <td><strong>Agent Flow Interruption</strong></td>
+                  <td class="td-highlight"><span class="badge-success">Zero Interruption</span></td>
+                  <td>Pauses prompt loop</td>
+                  <td>Sudden compaction failure</td>
+                </tr>
+                <tr>
+                  <td><strong>Turn Velocity Sparkbars</strong></td>
+                  <td class="td-highlight"><span class="badge-success">16-Step Live Sparkbars</span></td>
+                  <td>None (Static snapshot)</td>
+                  <td>None</td>
+                </tr>
+                <tr>
+                  <td><strong>Payload Categorization</strong></td>
+                  <td class="td-highlight"><span class="badge-success">Skills / Code / Docs / Shell</span></td>
+                  <td>Unstructured text dump</td>
+                  <td>None</td>
+                </tr>
+                <tr>
+                  <td><strong>Subagent Fleet Hierarchy</strong></td>
+                  <td class="td-highlight"><span class="badge-success">Full Tree with Tool State</span></td>
+                  <td>Root agent only</td>
+                  <td>Invisible subagent burn</td>
+                </tr>
+                <tr>
+                  <td><strong>Prompt Cache Warmth</strong></td>
+                  <td class="td-highlight"><span class="badge-success">Hit Rate + Warm Window</span></td>
+                  <td>Not exposed</td>
+                  <td>Unpredictable cold re-evals</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quickstart & Installation -->
+    <section class="quickstart-section" id="quickstart">
+      <div class="content-wrapper">
+        <div class="section-heading-block">
+          <div class="section-tag-chip">Get Started</div>
+          <h2 class="section-title">Install in under 30 seconds</h2>
+          <p class="section-desc">
+            Clone directly into your Antigravity plugins directory or launch standalone in your browser.
+          </p>
+        </div>
+
+        <div class="install-panel-grid">
+          <!-- Install Option 1: Plugin -->
+          <div class="install-card">
+            <div class="install-card-head">
+              <span class="install-step-num">Option A</span>
+              <h3 class="install-card-title">Install as Antigravity Plugin</h3>
+              <p class="install-card-desc">Docks directly inside Antigravity's auxiliary side pane.</p>
+            </div>
+
+            <div class="code-tabs-widget">
+              <div class="code-tabs-header">
+                <button type="button" class="btn-tab active" data-tab="win">Windows (PowerShell)</button>
+                <button type="button" class="btn-tab" data-tab="posix">macOS / Linux</button>
+              </div>
+              <div class="code-tab-body" id="tab-content-win">
+                <pre><code>git clone https://github.com/jaytaykay/antigravity-context-monitor.git "$env:USERPROFILE\.gemini\config\plugins\context-monitor"</code></pre>
+              </div>
+              <div class="code-tab-body hidden" id="tab-content-posix">
+                <pre><code>git clone https://github.com/jaytaykay/antigravity-context-monitor.git ~/.gemini/config/plugins/context-monitor</code></pre>
+              </div>
+            </div>
+
+            <div class="usage-callouts">
+              <div class="usage-step">
+                <span class="step-num">1</span>
+                <span>Type <code>/context-monitor</code> in chat to summon the side pane pill.</span>
+              </div>
+              <div class="usage-step">
+                <span class="step-num">2</span>
+                <span>Or select <strong>Context Monitor</strong> from the IDE Extensions menu.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Install Option 2: Standalone -->
+          <div class="install-card">
+            <div class="install-card-head">
+              <span class="install-step-num">Option B</span>
+              <h3 class="install-card-title">Run Standalone Preview</h3>
+              <p class="install-card-desc">Open in any browser to inspect sessions or test offline.</p>
+            </div>
+
+            <div class="standalone-code-box">
+              <pre><code>git clone https://github.com/jaytaykay/antigravity-context-monitor.git
+cd antigravity-context-monitor
+npm start</code></pre>
+            </div>
+
+            <div class="usage-callouts">
+              <div class="usage-step">
+                <span class="step-num">1</span>
+                <span>Open <code>http://127.0.0.1:3456/</code> in any desktop web browser.</span>
+              </div>
+              <div class="usage-step">
+                <span class="step-num">2</span>
+                <span>Zero external npm dependencies required (uses built-in <code>node:sqlite</code>).</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Engineered Footer -->
+  <footer class="site-footer">
+    <div class="content-wrapper footer-grid">
+      <div class="footer-left">
+        <div class="footer-brand">
+          <svg class="brand-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+          <span class="footer-title">Context Monitor for Google Antigravity</span>
+        </div>
+        <p class="footer-copy">
+          Designed for high-density agent workflows. Licensed under the MIT License.
+        </p>
+      </div>
+
+      <div class="footer-links-group">
+        <div class="footer-col">
+          <span class="footer-col-title">Navigation</span>
+          <a href="#simulator">Live Simulator</a>
+          <a href="#features">Features</a>
+          <a href="#architecture">Architecture</a>
+          <a href="#quickstart">Quickstart</a>
+        </div>
+        <div class="footer-col">
+          <span class="footer-col-title">Repository</span>
+          <a href="https://github.com/jaytaykay/antigravity-context-monitor" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+          <a href="https://github.com/jaytaykay/antigravity-context-monitor/issues" target="_blank" rel="noopener noreferrer">Issue Tracker</a>
+          <a href="https://github.com/jaytaykay/antigravity-context-monitor/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
+        </div>
+      </div>
+    </div>
+    <div class="content-wrapper footer-bottom-bar">
+      <span>Â© 2026 jaytaykay â€¢ Antigravity Plugin Ecosystem</span>
+      <span class="telemetry-stamp">Zero Telemetry Trackers â€¢ 100% Local</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

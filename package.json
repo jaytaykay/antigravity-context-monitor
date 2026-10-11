@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "node sidecars/panel/main.mjs",
-    "test": "node --check sidecars/panel/main.mjs && node --check sidecars/panel/app.js"
+    "test": "node --check sidecars/panel/main.mjs && node --check sidecars/panel/app.js && node --check docs/script.js"
   },
   "keywords": [
     "antigravity",

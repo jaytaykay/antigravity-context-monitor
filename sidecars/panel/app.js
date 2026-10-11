@@ -73,6 +73,63 @@ function updateUi(data) {
 
   // 4. Agent Tree & Active Step
   renderAgentTree(data);
+
+  // 5. Apply URL Inspection / Drawer options
+  applyUrlOptions(data);
+}
+
+function applyUrlOptions(data) {
+  try {
+    const params = new URLSearchParams(window.location.search);
+
+    // Subagent demo mode for visual testing / previews
+    if (params.get('demo') === 'multiagent' && (!data.subagents || data.subagents.length === 0)) {
+      data.subagents = [
+        { conversationId: 'sub-research', agentName: 'Architecture Researcher', isRunning: false, latestTool: 'read_url_content', totalContextTokens: 14250 },
+        { conversationId: 'sub-builder', agentName: 'Telemetry Engine Optimizer', isRunning: true, latestTool: 'run_command: cargo test', totalContextTokens: 38920 }
+      ];
+      renderAgentTree(data);
+    }
+
+    // Inspect peak turn or target step
+    const inspect = params.get('inspect');
+    if (inspect && data.recentTurns && data.recentTurns.length > 0) {
+      let targetIdx = -1;
+      if (inspect === 'peak') {
+        let maxTok = -1;
+        data.recentTurns.forEach((t, i) => {
+          if ((t.inputTokens || 0) > maxTok) {
+            maxTok = t.inputTokens || 0;
+            targetIdx = i;
+          }
+        });
+      } else if (inspect === 'latest') {
+        targetIdx = data.recentTurns.length - 1;
+      } else if (!isNaN(parseInt(inspect, 10))) {
+        targetIdx = parseInt(inspect, 10);
+      }
+      if (targetIdx >= 0 && targetIdx < data.recentTurns.length) {
+        selectedTurnIndex = targetIdx;
+        openStepInspector(data.recentTurns[targetIdx]);
+        renderSparkChart(data);
+      }
+    }
+
+    // Open accordion drawers
+    const openDrawers = params.get('open');
+    if (openDrawers) {
+      if (openDrawers === 'all') {
+        document.querySelectorAll('.attr-drawer').forEach(d => { d.open = true; });
+      } else {
+        openDrawers.split(',').forEach(id => {
+          const d = $(`drawer-${id.trim()}`);
+          if (d) d.open = true;
+        });
+      }
+    }
+  } catch (e) {
+    console.warn('Error applying URL options:', e);
+  }
 }
 
 function renderCapacityAndModel(data) {

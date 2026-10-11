@@ -1,0 +1,11 @@
+# Dependencies & OS artifacts
+node_modules/
+.DS_Store
+Thumbs.db
+
+# Runtime data and logs
+.data/
+*.log
+
+# Local design scratch
+.impeccable/

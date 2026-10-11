@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Context Monitor</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/preload.js"></script>
+</head>
+<body>
+  <main class="panel" id="app-shell">
+    <!-- Top Header: Active Agent & Auto-Detected Model -->
+    <header class="app-header">
+      <div class="header-main">
+        <div class="agent-identity-wrap">
+          <svg class="agent-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+          <div class="agent-text">
+            <h1 id="conv-title">Context Monitor</h1>
+            <span id="agent-role-chip" class="agent-role-chip">Main Agent</span>
+          </div>
+        </div>
+
+        <div class="model-badge-wrap">
+          <!-- Auto-detected model pill: no manual 1M/2M toggle needed! -->
+          <span id="auto-model-badge" class="model-auto-chip" title="Auto-detected from active session settings">
+            <span class="model-name" id="model-name-text">Gemini 3.8 Flash</span>
+            <span class="model-limit" id="model-limit-text">1.0M</span>
+          </span>
+          <span id="health-dot" class="health-dot nominal" title="Context health status"></span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Context Window Capacity Ribbon -->
+    <section class="card capacity-card">
+      <div class="capacity-header-row">
+        <div class="token-main-readout">
+          <span class="token-active-num" id="token-active-num">0</span>
+          <span class="token-sep">/</span>
+          <span class="token-limit-num" id="token-limit-num">1.0M</span>
+        </div>
+        <div class="capacity-right-meta">
+          <span class="pct-pill" id="token-pct-pill">0.0%</span>
+          <span class="remain-text" id="token-remain-text">1.0M remaining</span>
+        </div>
+      </div>
+
+      <div class="capacity-track-wrap">
+        <div class="capacity-track">
+          <div id="bar-cached" class="bar-fill cached" style="width: 0%" title="Prompt Cache"></div>
+          <div id="bar-fresh" class="bar-fill fresh" style="width: 0%" title="Fresh Input & Tools"></div>
+        </div>
+        <!-- Subtle threshold pips -->
+        <div class="track-pip pip-50" title="50%"></div>
+        <div class="track-pip pip-75" title="75% Elevated"></div>
+        <div class="track-pip pip-90" title="90% Critical"></div>
+      </div>
+
+      <div class="capacity-legend-row">
+        <span class="legend-chip"><span class="dot cached"></span> Cached: <b id="stat-cached-val">0</b></span>
+        <span class="legend-chip"><span class="dot fresh"></span> Fresh: <b id="stat-fresh-val">0</b></span>
+        <span class="legend-chip"><span class="dot output"></span> Output: <b id="stat-output-val">0</b></span>
+      </div>
+    </section>
+
+    <!-- Turn-by-Turn Velocity Graph (Hover updates header inside graph, click inspects step) -->
+    <section class="card graph-card">
+      <div class="graph-header">
+        <h2>Turn Velocity</h2>
+        <!-- Live readout directly in the graph itself (on hover of any bar) -->
+        <span class="graph-live-readout" id="graph-readout">
+          <b id="readout-step">–</b> • <span id="readout-tokens">0 in, 0 out</span>
+        </span>
+      </div>
+
+      <div class="spark-chart-area">
+        <div class="spark-bars-container" id="sparkbars-container">
+          <!-- 16 dynamic interactive bars rendered by app.js -->
+        </div>
+        <div class="spark-axis-labels">
+          <span id="spark-oldest-label">Step –</span>
+          <span id="spark-latest-label">Latest</span>
+        </div>
+      </div>
+
+      <!-- Selected Step Inspector Drawer (Opens when a user clicks a bar) -->
+      <div class="step-inspector-box" id="step-inspector" hidden>
+        <div class="inspector-head">
+          <span class="inspector-title" id="inspector-title">Step 0 Details</span>
+          <button id="btn-close-inspector" class="btn-micro-close" type="button" title="Close inspector">✕</button>
+        </div>
+        <div class="inspector-metrics-row">
+          <span class="insp-metric">Input: <b id="insp-input">0</b></span>
+          <span class="insp-metric">Output: <b id="insp-output">0</b></span>
+          <span class="insp-metric">Cache: <b id="insp-cache">0</b></span>
+        </div>
+        <div class="inspector-items-list" id="inspector-items">
+          <!-- Items executed during this specific step -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Context Payload Attribution Accordions (Click to open, main info in dropdown hint) -->
+    <section class="card attribution-card">
+      <div class="card-head">
+        <h2>Context Payloads</h2>
+        <span class="help-text">Where tokens reside</span>
+      </div>
+
+      <div class="accordion-list">
+        <!-- Drawer 1: Skills & Instructions -->
+        <details class="attr-drawer" id="drawer-skills">
+          <summary class="attr-summary">
+            <div class="attr-left">
+              <svg class="attr-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              <span class="attr-title">Skills &amp; System Rules</span>
+            </div>
+            <!-- Main info shown in dropdown hint before expanding -->
+            <div class="attr-hint">
+              <span class="hint-pill" id="hint-skills">0 files • 0 tok</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </summary>
+          <div class="drawer-content">
+            <ul class="file-tokens-list" id="list-skills">
+              <li class="empty-state">No specialized skills loaded.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Drawer 2: Code Files -->
+        <details class="attr-drawer" id="drawer-code">
+          <summary class="attr-summary">
+            <div class="attr-left">
+              <svg class="attr-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              <span class="attr-title">Code Files (Read / Edited)</span>
+            </div>
+            <div class="attr-hint">
+              <span class="hint-pill" id="hint-code">0 files • 0 tok</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </summary>
+          <div class="drawer-content">
+            <ul class="file-tokens-list" id="list-code">
+              <li class="empty-state">No code files accessed yet.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Drawer 3: Markdown & Docs -->
+        <details class="attr-drawer" id="drawer-docs">
+          <summary class="attr-summary">
+            <div class="attr-left">
+              <svg class="attr-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              <span class="attr-title">Markdown &amp; Plans</span>
+            </div>
+            <div class="attr-hint">
+              <span class="hint-pill" id="hint-docs">0 files • 0 tok</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </summary>
+          <div class="drawer-content">
+            <ul class="file-tokens-list" id="list-docs">
+              <li class="empty-state">No documentation files accessed.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Drawer 4: Terminal & Commands -->
+        <details class="attr-drawer" id="drawer-terminal">
+          <summary class="attr-summary">
+            <div class="attr-left">
+              <svg class="attr-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+              <span class="attr-title">Terminal &amp; Command Output</span>
+            </div>
+            <div class="attr-hint">
+              <span class="hint-pill" id="hint-terminal">0 calls • 0 tok</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </summary>
+          <div class="drawer-content">
+            <ul class="file-tokens-list" id="list-terminal">
+              <li class="empty-state">No terminal command outputs.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Drawer 5: Prompt Cache & History -->
+        <details class="attr-drawer" id="drawer-history">
+          <summary class="attr-summary">
+            <div class="attr-left">
+              <svg class="attr-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span class="attr-title">Cache Lifecycle &amp; History</span>
+            </div>
+            <div class="attr-hint">
+              <span class="hint-pill" id="hint-history">0 tok • Hot</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </summary>
+          <div class="drawer-content">
+            <div class="history-metrics-grid">
+              <div class="h-metric-row">
+                <span>Cache Hit Rate:</span>
+                <span class="val highlight" id="hist-hit-rate">0.0%</span>
+              </div>
+              <div class="h-metric-row">
+                <span>Cached History Tokens:</span>
+                <span class="val" id="hist-cached-tok">0</span>
+              </div>
+              <div class="h-metric-row">
+                <span>Last Model Response:</span>
+                <span class="val" id="hist-elapsed-time">Just now</span>
+              </div>
+              <div class="h-metric-row">
+                <span>Warm Discount Window:</span>
+                <span class="val" id="hist-warmth-window">~5m left</span>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Agent Tree & Active Step (Surgical, no fluff) -->
+    <section class="card tree-card">
+      <div class="card-head">
+        <h2>Agent Hierarchy &amp; Active Step</h2>
+      </div>
+
+      <div class="agent-tree-container" id="agent-tree-container">
+        <!-- Rendered dynamically: Main Agent + child subagents with tree connectors -->
+      </div>
+    </section>
+
+    <!-- Footer Controls -->
+    <footer class="app-footer">
+      <div class="footer-left">
+        <button id="btn-sync" class="btn-sync" type="button" title="Synchronize telemetry now">
+          <svg class="sync-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          <span>Sync</span>
+        </button>
+        <label class="toggle-control" title="Auto-refresh every 3 seconds">
+          <input id="toggle-autorefresh" type="checkbox" checked>
+          <span class="toggle-track"></span>
+          <span class="toggle-text">Live (3s)</span>
+        </label>
+      </div>
+      <div class="footer-right">
+        <span class="session-label" id="session-label">Session: –</span>
+      </div>
+    </footer>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
